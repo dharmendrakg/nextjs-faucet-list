@@ -1,20 +1,20 @@
 import * as React from 'react';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
+import {Box, Container} from '@mui/material';
+import Tab from '@/components/Tab'
+import Table from '@/components/Table'
+import Header from '@/components/Header/Header'
+import Footer from '@/components/Footer/Footer'
 import Link from '../src/Link';
 
 export default function Index() {
   return (
-    <Container maxWidth="sm">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Next.js v5 example
-        </Typography>
-        <Link href="/about" color="secondary">
-          Go to the about page
-        </Link>
-      </Box>
-    </Container>
+    <Box style={{height: "100vh"}}>
+      <Header />
+      <Container maxWidth="lg">
+        <Tab />
+        <Table />
+      </Container>
+      <Footer />
+    </Box>
   );
 }
