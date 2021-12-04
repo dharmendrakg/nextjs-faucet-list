@@ -16,9 +16,9 @@ export default function expresscrypto() {
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <link rel="shortcut icon" href="/faucet-list/favicon.ico" />
         <meta name="keywords" content="ExpressCrypto, auto faucet, earn free cryptocurrency, bitcoin auto faucet, faucet list" />
-        <meta name="copyright" content="© 2022 Copyright faucetworld.in" />
-        <meta name="author" content="faucetworld.in" />
-        <meta name="email" content="admin@faucetworld.in" />
+        <meta name="copyright" content="© 2022 Copyright crypto-all.com" />
+        <meta name="author" content="crypto-all.com" />
+        <meta name="email" content="admin@crypto-all.com" />
         <meta httpEquiv="content-language" content="EN" />
       </Head>
       <Box style={{ height: "100vh" }}>
