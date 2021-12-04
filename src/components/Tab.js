@@ -2,15 +2,21 @@ import React from "react";
 import { makeStyles } from "@mui/styles";
 import { InputLabel, MenuItem, FormControl, Select, Box } from "@mui/material";
 import Image from "next/image";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { updateSelectedCoinSites } from "@/redux/slices/faucetListSlice";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
-    width: "60%",
+    width: "50%",
     display: "flex",
     margin: "0 auto",
+    [theme.breakpoints.down('md')]: {
+      width: "80%",
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: "100%",
+    },
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
@@ -59,12 +65,12 @@ const Tab = () => {
 
   return (
     <FormControl variant="filled" className={classes.formControl}>
-      <InputLabel id="demo-simple-select-outlined-label">
+      <InputLabel id="faucetlist">
         Select Crypto Coin
       </InputLabel>
       <Select
-        labelId="demo-simple-select-outlined-label"
-        id="demo-simple-select-outlined"
+        labelId="faucetlist"
+        id="faucetlist-filled"
         value={option}
         onChange={(e) => {
           setOption(e.target.value);

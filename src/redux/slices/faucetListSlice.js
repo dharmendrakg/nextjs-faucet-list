@@ -45,6 +45,7 @@ export const faucetListSlice = createSlice({
     selectedCoinSites: [],
     selectedCoin: getSelectedCurrency(),
     favoriteSites: getFavoriteSites(),
+    visited: [],
     isFetching: false,
     isSuccess: false,
     isError: false,
@@ -81,6 +82,16 @@ export const faucetListSlice = createSlice({
         cookies.set("favorite-sites", state.favoriteSites);
         return state;
     },
+
+    updateVisited: (state, {payload}) => {
+      state.visited = [...state.visited, payload]
+    },
+
+    clearFavorite: (state, {payload}) => {
+      const cookies = new Cookies();
+      cookies.remove("favorite-sites");
+      state.favoriteSites = [];
+    }
   },
   extraReducers: {
     [getFaucetList.fulfilled]: (state, { payload }) => {
@@ -102,6 +113,6 @@ export const faucetListSlice = createSlice({
 });
 
 
-export const { clearState, updateSelectedCoinSites, updateFavoriteSites } = faucetListSlice.actions;
+export const { clearState, updateSelectedCoinSites, updateFavoriteSites, updateVisited, clearFavorite } = faucetListSlice.actions;
 
 export default faucetListSlice.reducer

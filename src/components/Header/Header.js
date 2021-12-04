@@ -8,9 +8,9 @@ const Header = () => {
             <li><Link href="/"><i className="fa fa-home" aria-hidden="true" /> Home</Link></li>
             <li><Link href='/'>All Faucet List<i className="zm-caret fa fa-caret-down" aria-hidden="true"></i></Link>
                 <ul className="z-depth-4"  style={{width:"250px"}}>
-                    <li><a className="faa-pulse animated yellow-text" href="https://faucetspro.com/auto-faucet-list-in-2020" target="_blank" rel="noopener noreferrer">AutoFaucet List</a></li>
-                    <li><a href="https://faucetspro.com/all-time-best-and-trusted-faucts/" target="_blank" rel="noopener noreferrer">All Time Best List</a></li>
-                    <li><a href="/faucet-list" target="_blank" rel="noopener noreferrer">Express Crypto Faucets</a></li>
+                    <li><a className="faa-pulse animated yellow-text" href="https://faucetspro.com/auto-faucet-list-in-2022" target="_blank" rel="noopener noreferrer">AutoFaucet List</a></li>
+                    <li><a href="https://faucetspro.com/all-time-best-and-trusted-faucets/" target="_blank" rel="noopener noreferrer">All Time Best List</a></li>
+                    <li><a href="/features/faucet-list/expresscrypto" target="_blank" rel="noopener noreferrer">Express Crypto Faucets</a></li>
                     <li><a href="/faucetpay-list" target="_blank" rel="noopener noreferrer">Faucetpay Faucets</a></li>
                     <li><a href="/high-paying-faucet-rotator" rel="noopener noreferrer">Faucet Rotator</a></li>
                 </ul>
@@ -23,13 +23,14 @@ const Header = () => {
                     <li><a href='/news' target="_blank" rel="noopener noreferrer">Latest News <i className="fa fa-newspaper-o" aria-hidden="true"></i></a></li>
                     <li><a href="https://faucetspro.com/all-cryptocurrency-exchanges" target="_blank" rel="noopener noreferrer">All Crypto exchanges</a></li>
                     <li><a href="/icon-generator" target="_blank" rel="noopener noreferrer">Icon Generator <i className="fa fa-html5" aria-hidden="true"></i></a></li>
-                    <li><a href="https://faucetspro.com/best-websites-for-online-education-in-2020" target="_blank" rel="noopener noreferrer">All Learning Sites</a></li>
+                    <li><a href="https://faucetspro.com/best-websites-for-online-education-in-2022" target="_blank" rel="noopener noreferrer">All Learning Sites</a></li>
                     <li><a href="/password-generator" target="_blank" rel="noopener noreferrer">Password Generator <i className="fa fa-lock" aria-hidden="true"></i></a></li>
                 </ul>
             </li>
             <li><a className="yellow-text" href='#/'><i className="fa fa-question-circle-o" aria-hidden="true"></i>Help<i className="zm-caret fa fa-caret-down" aria-hidden="true"></i></a>
                 <ul className="z-depth-4" style={{width:"300px"}}>
                     <li><a target="_blank" rel="noopener noreferrer" href='https://faucetspro.com/how-to-earn-free-cryptocurrency-from-faucetworld-autofaucet/'>How to earn from Faucetworld</a></li>
+                    <li><a target="_blank" rel="noopener noreferrer" href='https://faucetspro.com/earn-interest-on-your-crypto-investment-on-binance'>Binance Earn</a></li>
                     <li><a className="yellow-text" href='#/'>How To get cryptocurrency wallets?<i className="zm-caret fa fa-caret-right" aria-hidden="true"></i></a>
                         <ul className="z-depth-4" style={{width:"300px"}}>
                             <li><a target="_blank" rel="noopener noreferrer" href='https://faucetspro.com/top-secure-bitcoin-and-cryptocurrency-wallets/'>Top Cryptocurrency wallets </a></li>
@@ -47,6 +48,7 @@ const Header = () => {
                             <li><a target="_blank" rel="noopener noreferrer" href='https://faucetspro.com/buy-bitcoin-with-apple-pay/'>Buy Bitcoin with Apple Pay <i className="fa fa-apple" aria-hidden="true"></i></a></li>
                         </ul>
                     </li>
+                    <li><a target="_blank" rel="noopener noreferrer" href='https://faucetspro.com/category/crypto-courses'>Crypto Trading Courses</a></li>
                 </ul>
             </li>
             <li className="zm-right-item"><a href="/about-us" target="_blank" rel="noopener noreferrer">About us</a></li>

@@ -1,33 +1,54 @@
 import { useState, useEffect } from "react";
-import { DataGrid } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridOverlay,
+  useGridApiContext,
+  useGridState,
+  GridToolbarContainer,
+  GridToolbarColumnsButton,
+  GridToolbarFilterButton,
+  GridToolbarExport,
+  GridToolbarDensitySelector,
+} from "@mui/x-data-grid";
 import { useSelector, useDispatch } from "react-redux";
-import { Fab, useMediaQuery } from "@mui/material";
+import LinearProgress from '@mui/material/LinearProgress';
+import { IconButton, useMediaQuery, Pagination, Box, Stack, Chip, Avatar } from "@mui/material";
 import Rating from "@mui/material/Rating";
-import Link from '@/src/Link';
-import { darken, lighten } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles';
+import Link from "@/src/Link";
+import { darken, lighten } from "@mui/material/styles";
+import { makeStyles } from "@mui/styles";
 import {
   getFaucetList,
-  updateFavoriteSites
+  updateFavoriteSites,
+  updateVisited,
+  clearFavorite,
 } from "@/redux/slices/faucetListSlice";
+import AirplanemodeActiveIcon from '@mui/icons-material/AirplanemodeActive';
+import ClearConfirmation from "./ClearConfirmation";
 
 const useStyles = makeStyles((theme) => {
-  const getBackgroundColor = (color) => theme.palette.mode === 'dark' ? darken(color, 0.6) : lighten(color, 0.6);
+  const getBackgroundColor = (color) =>
+    theme.palette.mode === "dark" ? darken(color, 0.6) : lighten(color, 0.6);
 
-  const getHoverBackgroundColor = (color) => theme.palette.mode === 'dark' ? darken(color, 0.5) : lighten(color, 0.5);
+  const getHoverBackgroundColor = (color) =>
+    theme.palette.mode === "dark" ? darken(color, 0.5) : lighten(color, 0.5);
   return {
     root: {
-      '& .super-app-theme--header': {
-        backgroundColor: 'rgba(255, 7, 0, 0.55)',
-      },
-      '& .super-app-theme--favorite': {
-        backgroundColor: getBackgroundColor(theme.palette.info.main),
-        '&:hover': {
-          backgroundColor: getHoverBackgroundColor(theme.palette.info.main),
+      "& .super-app-theme--header": {
+        backgroundColor: "rgb(193 191 191 / 55%)",
+        "&:hover": {
+          backgroundColor: "rgb(181 180 180 / 55%)",
         }
-      }
+      },
+      "& .super-app-theme--favorite": {
+        backgroundColor: getBackgroundColor(theme.palette.info.main),
+        "&:hover": {
+          backgroundColor: getHoverBackgroundColor(theme.palette.info.main),
+        },
+      },
     },
-  }});
+  };
+});
 
 function renderRating({ row }) {
   let value = 5;
@@ -47,17 +68,61 @@ function renderRating({ row }) {
   return <Rating readOnly value={value} />;
 }
 
+function CustomPagination() {
+  const apiRef = useGridApiContext();
+  const [state] = useGridState(apiRef);
+
+  return (
+    <Pagination
+      color="primary"
+      count={state.pagination.pageCount}
+      page={state.pagination.page + 1}
+      onChange={(event, value) => apiRef.current.setPage(value - 1)}
+    />
+  );
+}
+
+function CustomLoadingOverlay() {
+  return (
+    <GridOverlay>
+      <div style={{ position: 'absolute', top: 0, width: '100%' }}>
+        <LinearProgress />
+      </div>
+    </GridOverlay>
+  );
+}
+
+function CustomToolbar() {
+  const dispatch = useDispatch();
+  return (
+    <GridToolbarContainer>
+      <GridToolbarColumnsButton />
+      <GridToolbarFilterButton />
+      <GridToolbarDensitySelector />
+      {/* <GridToolbarExport /> */}
+      <ClearConfirmation onConfirm={() => dispatch(clearFavorite())} />
+    </GridToolbarContainer>
+  );
+}
+
 export default function Table() {
   const [rows, setRows] = useState([]);
-  const isDownSmall = useMediaQuery((theme) => theme.breakpoints.down('sm'));
-  const { isFetching, isSuccess, isError, errorMessage, sites, selectedCoinSites, favoriteSites } = useSelector(
-    (state) => state.faucetList
-  );
+  const isDownSmall = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+  const {
+    isFetching,
+    isSuccess,
+    isError,
+    errorMessage,
+    sites,
+    selectedCoinSites,
+    favoriteSites,
+    visited,
+  } = useSelector((state) => state.faucetList);
   const dispatch = useDispatch();
   const classes = useStyles();
 
-  const buttonClickHandler = (e) => {
-    e.target.style.backgroundColor = "black";
+  const buttonClickHandler = (e, row) => {
+    dispatch(updateVisited(row));
   };
 
   const renderFavorite = ({ row }) => {
@@ -82,17 +147,22 @@ export default function Table() {
 
   const renderVisit = ({ row }) => {
     return (
-      <Fab
-        variant="extended"
-        color="secondary"
-        href={row.link + "?r=EC-UserId-6449"}
-        id={row.siteId}
+      <IconButton
+        color={row.visited ? "error" : "success"}
+        aria-label="Visit"
         target="_blank"
         rel="noopener noreferrer"
-        onClick={()=>buttonClickHandler(row)}
+        onClick={(e) => buttonClickHandler(e, row)}
+        href={row.link + "?r=EC-UserId-6449"}
       >
-        Visit
-      </Fab>
+        <AirplanemodeActiveIcon />
+      </IconButton>
+    );
+  };
+
+  const renderTimer = ({ row }) => {
+    return (
+      <Chip label={row.timer} size="small" />
     );
   };
 
@@ -103,7 +173,8 @@ export default function Table() {
         id={row.siteId}
         target="_blank"
         rel="noopener noreferrer"
-        style={{color: "blue", textDecoration: "none"}}
+        style={{ textDecoration: "none" }}
+        onClick={(e) => buttonClickHandler(e, row)}
       >
         {row.siteName}
       </Link>
@@ -111,32 +182,78 @@ export default function Table() {
   };
 
   const columns = [
-    { field: "siteName", type:"string", headerName: "Faucet Name", renderCell: renderFaucetName, flex: 3, headerClassName: 'super-app-theme--header', },
+    {
+      field: "favorite",
+      headerName: "*",
+      renderCell: renderFavorite,
+      flex: 0.01,
+      headerClassName: "super-app-theme--header",
+    },
+    {
+      field: "siteName",
+      type: "string",
+      headerName: "Faucet Name",
+      renderCell: renderFaucetName,
+      flex: 3,
+      headerClassName: "super-app-theme--header",
+    },
     {
       field: "status",
-      headerName: "Status",
+      headerName: "Rating",
       renderCell: renderRating,
       flex: 1,
       hide: isDownSmall ? true : false,
-      headerClassName: 'super-app-theme--header',
+      headerClassName: "super-app-theme--header",
     },
-    { field: "timer", type: "number", headerName: "Timer", hide: isDownSmall ? true : false, flex: 1, headerClassName: 'super-app-theme--header', },
-    { field: "reward", type: "number", headerName: "Reward", hide: isDownSmall ? true : false, flex: 1, headerClassName: 'super-app-theme--header', },
+    {
+      field: "owner",
+      type: "string",
+      headerName: "Owner",
+      hide: true,
+      flex: 1,
+      headerClassName: "super-app-theme--header",
+    },
+    {
+      field: "users",
+      type: "number",
+      headerName: "Users",
+      hide: isDownSmall ? true : false,
+      flex: 1,
+      headerClassName: "super-app-theme--header",
+    },
+    {
+      field: "activeSince",
+      type: "string",
+      headerName: "Active Since",
+      hide: isDownSmall ? true : false,
+      flex: 1,
+      headerClassName: "super-app-theme--header",
+    },
+    {
+      field: "timer",
+      type: "number",
+      headerName: "Timer",
+      renderCell: renderTimer,
+      hide: false,
+      flex: 1,
+      headerClassName: "super-app-theme--header",
+    },
+    {
+      field: "reward",
+      type: "number",
+      headerName: "Reward",
+      hide: true,
+      flex: 1,
+      headerClassName: "super-app-theme--header",
+    },
     {
       field: "visit",
       headerName: "Visit",
-      type: 'actions',
+      type: "actions",
       renderCell: renderVisit,
-      flex: 1, 
-      headerClassName: 'super-app-theme--header',
+      flex: 0.2,
+      headerClassName: "super-app-theme--header",
     },
-    {
-        field: "favorite",
-        headerName: "Favorite",
-        renderCell: renderFavorite,
-        flex: 0.3,
-        headerClassName: 'super-app-theme--header',
-      },
   ];
 
   useEffect(() => {
@@ -162,30 +279,42 @@ export default function Table() {
       }) => {
         return {
           id: siteId,
+          favorite: favoriteSites.includes(siteId) ? 1 : 0,
           siteName: siteName,
           status: abilityToPay,
           timer: timeFrame,
           reward: reward,
           link: link,
-          favorite: favoriteSites.includes(siteId) ? 1 : 0,
+          owner,
+          currency,
+          users,
+          totalPaid,
+          activeSince,
+          visited: visited.filter((visit) => visit.id === siteId).length === 1,
         };
       }
     );
     setRows(temp);
-  }, [favoriteSites, selectedCoinSites]);
+  }, [favoriteSites, selectedCoinSites, visited]);
 
   return (
-    <div style={{ width: '100%' }} className={classes.root}>
-        <DataGrid
-            rows={rows}
-            columns={columns}
-            pageSize={20}
-            autoHeight={true}
-            autoPageSize={true}
-            getRowClassName={(params) =>
-              params.getValue(params.id, 'favorite') ? "super-app-theme--favorite" : "super-app-theme--non-favorite"
-            }
-        />
-    </div>
+    <Box sx={{ width: "100%" }} className={classes.root}>
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        pageSize={20}
+        autoHeight={true}
+        autoPageSize={true}
+        // getRowClassName={(params) =>
+        //   params.getValue(params.id, 'favorite') ? "super-app-theme--favorite" : "super-app-theme--non-favorite"
+        // }
+        loading = {isFetching}
+        components={{
+          LoadingOverlay: CustomLoadingOverlay,
+          Pagination: CustomPagination,
+          Toolbar: CustomToolbar,
+        }}
+      />
+    </Box>
   );
 }
