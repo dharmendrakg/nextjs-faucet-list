@@ -6,7 +6,7 @@ export const getFaucetList = createAsyncThunk(
   "faucets/getFaucetList",
   async (_, thunkAPI) => {
     try {
-      const { data, status } = await axios.get('https://crypto-all.com/api/faucet-list/express-crypto');
+      const { data, status } = await axios.get('https://faucetworld.in/api-data/express-crypto-list.php');
       if (status === 200) {
         return data;
       } else {
